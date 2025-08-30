@@ -3,6 +3,7 @@ volumes:
   postgres_storage:
   ollama_storage:
   qdrant_storage:
+  grafana_storage:
 
 networks:
   demo:
@@ -148,3 +149,31 @@ services:
     image: ollama/ollama:rocm
     depends_on:
      - ollama-gpu-amd
+
+  grafana:
+    profiles: ["analytics"]
+    image: grafana/grafana:latest
+    container_name: grafana
+    networks: ['demo']
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_storage:/var/lib/grafana
+    depends_on:
+      - postgres
+
+  jupyter:
+    profiles: ["analytics"]
+    image: jupyter/scipy-notebook:latest
+    container_name: jupyter
+    networks: ['demo']
+    restart: unless-stopped
+    ports:
+      - 8888:8888
+    volumes:
+      - ./shared:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - GRANT_SUDO=yes
+    user: root
