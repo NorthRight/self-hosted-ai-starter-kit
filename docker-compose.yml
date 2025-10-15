@@ -24,6 +24,9 @@ x-n8n: &service-n8n
     - NODE_FUNCTION_ALLOW_EXTERNAL_MODULES=is-sea
     - ALLOW_EXTERNAL_MODULES=is-sea
     - NODE_FUNCTION_ALLOW_EXTERNAL=axios,cheerio,node-fetch,is-sea
+    - NODE_FUNCTION_ALLOW_EXTERNAL=*
+    - NODE_FUNCTION_ALLOW_BUILTIN=*
+    # docker-compose exec -u root n8n npm install -g is-sea <-- This line allows me to install npm packages and use them in docker
   env_file:
     - path: .env
       required: true
